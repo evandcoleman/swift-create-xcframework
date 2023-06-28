@@ -19,7 +19,7 @@ struct XcodeBuilder {
     let path: AbsolutePath
     let project: Xcode.Project
     let package: PackageInfo
-    let options: Command.Options
+    let options: Options
 
     var buildDirectory: Foundation.URL {
         self.package.projectBuildDirectory
@@ -29,7 +29,7 @@ struct XcodeBuilder {
 
     // MARK: - Initialisation
 
-    init (project: Xcode.Project, projectPath: AbsolutePath, package: PackageInfo, options: Command.Options) {
+    init (project: Xcode.Project, projectPath: AbsolutePath, package: PackageInfo, options: Options) {
         self.project = project
         self.path = projectPath
         self.package = package

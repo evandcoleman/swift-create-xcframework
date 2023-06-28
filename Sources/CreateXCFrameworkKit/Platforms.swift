@@ -8,19 +8,19 @@
 import ArgumentParser
 import PackageModel
 
-enum TargetPlatform: String, ExpressibleByArgument, CaseIterable {
+public enum TargetPlatform: String, ExpressibleByArgument, CaseIterable {
     case ios
     case macos
     case maccatalyst
     case tvos
     case watchos
 
-    init?(argument: String) {
+    public init?(argument: String) {
         self.init(rawValue: argument.lowercased())
     }
 
 
-    var platformName: String {
+    public var platformName: String {
         switch self {
         case .ios:          return "ios"
         case .macos:        return "macos"
@@ -32,14 +32,14 @@ enum TargetPlatform: String, ExpressibleByArgument, CaseIterable {
 
     // MARK: - Target SDKs
 
-    struct SDK {
+    public struct SDK {
         let destination: String
         let archiveName: String
         let releaseFolder: String
         let buildSettings: [String: String]?
     }
 
-    var sdks: [SDK] {
+    public var sdks: [SDK] {
         switch self {
         case .ios:
             return [

@@ -49,16 +49,21 @@ let package = Package(
 
     products: [
         .executable(name: "swift-create-xcframework", targets: [ "CreateXCFramework" ]),
+        .library(name: "CreateXCFrameworkKit", targets: [ "CreateXCFrameworkKit" ]),
     ],
 
     dependencies: dependencies,
 
     targets: [
-        .target(name: "CreateXCFramework", dependencies: [
-            .product(name: "ArgumentParser", package: "swift-argument-parser"),
-            .product(name: "SwiftPM-auto", package: "SwiftPM"),
-            .product(name: "SwiftToolsSupport-auto", package: "swift-tools-support-core"),
-        ]),
+        .target(name: "CreateXCFramework", dependencies: [ "CreateXCFrameworkKit" ]),
+        .target(
+            name: "CreateXCFrameworkKit",
+            dependencies: [
+                .product(name: "ArgumentParser", package: "swift-argument-parser"),
+                .product(name: "SwiftPM-auto", package: "SwiftPM"),
+                .product(name: "SwiftToolsSupport-auto", package: "swift-tools-support-core"),
+            ]
+        ),
         .testTarget(name: "CreateXCFrameworkTests", dependencies: [ "CreateXCFramework" ]),
     ],
 

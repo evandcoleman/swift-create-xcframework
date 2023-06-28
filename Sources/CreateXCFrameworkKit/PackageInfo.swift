@@ -23,30 +23,30 @@ import TSCBasic
 import Workspace
 import Xcodeproj
 
-struct PackageInfo {
+public struct PackageInfo {
 
     // MARK: - Properties
 
-    let rootDirectory: Foundation.URL
-    let buildDirectory: Foundation.URL
+    public let rootDirectory: Foundation.URL
+    public let buildDirectory: Foundation.URL
 
-    var projectBuildDirectory: Foundation.URL {
+    public var projectBuildDirectory: Foundation.URL {
         return self.buildDirectory
             .appendingPathComponent("swift-create-xcframework")
             .absoluteURL
     }
 
-    var hasDistributionBuildXcconfig: Bool {
+    public var hasDistributionBuildXcconfig: Bool {
         self.overridesXcconfig != nil || self.options.stackEvolution == false
     }
 
-    var distributionBuildXcconfig: Foundation.URL {
+    public var distributionBuildXcconfig: Foundation.URL {
         return self.projectBuildDirectory
             .appendingPathComponent("Distribution.xcconfig")
             .absoluteURL
     }
 
-    var overridesXcconfig: Foundation.URL? {
+    public var overridesXcconfig: Foundation.URL? {
         guard let path = self.options.xcconfig else { return nil }
 
         // absolute path
@@ -70,16 +70,16 @@ struct PackageInfo {
     let diagnostics = DiagnosticsEngine()
 #endif
 
-    let options: Command.Options
-    let graph: PackageGraph
-    let manifest: Manifest
-    let toolchain: UserToolchain
-    let workspace: Workspace
+    public let options: Options
+    public let graph: PackageGraph
+    public let manifest: Manifest
+    public let toolchain: UserToolchain
+    public let workspace: Workspace
 
 
     // MARK: - Initialisation
 
-    init (options: Command.Options) throws { // swiftlint:disable:this function_body_length
+    public init (options: Options) throws { // swiftlint:disable:this function_body_length
         self.options = options
         self.rootDirectory = Foundation.URL(fileURLWithPath: options.packagePath, isDirectory: true).absoluteURL
         self.buildDirectory = self.rootDirectory.appendingPathComponent(options.buildPath, isDirectory: true).absoluteURL
@@ -142,7 +142,7 @@ struct PackageInfo {
 
     // MARK: - Validation
 
-    func validationErrors () -> [PackageValidationError] {
+    public func validationErrors () -> [PackageValidationError] {
         var errors = [PackageValidationError]()
 
         // check the graph for binary targets
@@ -169,7 +169,7 @@ struct PackageInfo {
 
     // MARK: - Product/Target Names
 
-    func validProductNames (project: Xcode.Project) throws -> [String] {
+    public func validProductNames (project: Xcode.Project) throws -> [String] {
 
         // find our build targets
         let productNames: [String]
@@ -211,7 +211,7 @@ struct PackageInfo {
         return productNames
     }
 
-    func printAllProducts (project: Xcode.Project) {
+    public func printAllProducts (project: Xcode.Project) {
         let allLibraryProductNames = self.manifest.libraryProductNames
         let xcodeTargetNames = project.frameworkTargets.map { $0.name }
         let nonRootPackageTargets = xcodeTargetNames.filter { allLibraryProductNames.contains($0) == false }
@@ -232,7 +232,7 @@ struct PackageInfo {
     // MARK: - Platforms
 
     /// check if our command line platforms are supported by the package definition
-    func supportedPlatforms () throws -> [TargetPlatform] {
+    public func supportedPlatforms () throws -> [TargetPlatform] {
 
         // if they have specified platforms all good, if not go everything except catalyst
         let supported = self.options.platform.nonEmpty ?? TargetPlatform.allCases.filter { $0 != .maccatalyst }
@@ -264,7 +264,7 @@ struct PackageInfo {
 
 // MARK: - Supported Platform Types
 
-enum SupportedPlatforms {
+public enum SupportedPlatforms {
     case noPackagePlatforms (plan: [SupportedPlatform])
     case packagePlatformsUnsupported (plan: [SupportedPlatform])
     case packageValid (plan: [SupportedPlatform])
@@ -286,12 +286,12 @@ extension SupportedPlatform: Comparable {
 
 // MARK: - Validation Errors
 
-enum PackageValidationError: LocalizedError {
+public enum PackageValidationError: LocalizedError {
     case containsBinaryTargets([String])
     case containsSystemModules([String])
     case containsConditionalDependencies([String])
 
-    var isFatal: Bool {
+    public var isFatal: Bool {
         switch self {
         case .containsBinaryTargets, .containsSystemModules:
             return true
@@ -300,7 +300,7 @@ enum PackageValidationError: LocalizedError {
         }
     }
 
-    var errorDescription: String? {
+    public var errorDescription: String? {
         switch self {
         case let .containsBinaryTargets(targets):
             return "Xcode project generation is not supported by Swift Package Manager for packages that contain binary targets."
@@ -316,7 +316,7 @@ enum PackageValidationError: LocalizedError {
 }
 
 #if swift(<5.6)
-extension Manifest {
+public extension Manifest {
     var displayName: String {
         name
     }
